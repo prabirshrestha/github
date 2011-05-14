@@ -7,12 +7,17 @@ namespace Github
 {
     public class GithubApi
     {
-        public GithubApi()
+        private readonly string _version;
+
+        public GithubApi(string version)
         {
-            Version = "v2";
+            if (string.IsNullOrEmpty(version))
+                throw new ArgumentNullException("version");
+
+            _version = version;
         }
 
-        public string Version { get; set; }
+        public string Version { get { return _version; } }
 
         public IWebProxy Proxy { get; set; }
 
@@ -52,7 +57,7 @@ namespace Github
         protected virtual FluentHttpRequest PrepareRequest(string method, string path, IDictionary<string, object> parameters)
         {
             var request = new FluentHttpRequest()
-                .BaseUrl(string.Format("http://github.com/api/{0}/json", Version))
+                .BaseUrl(string.Format("https://github.com/api/{0}/json", Version))
                 .ResourcePath(path)
                 .Method(method)
                 .Proxy(Proxy);
