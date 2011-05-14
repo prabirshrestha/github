@@ -26,7 +26,7 @@ namespace Github
             return Get(path, null);
         }
 
-        protected object GithubApiRequest(string method, string path, IDictionary<string, object> parameters, Type resultType)
+        protected virtual object GithubApiRequest(string method, string path, IDictionary<string, object> parameters, Type resultType)
         {
             // save the response to this stream.
             var responseStream = new System.IO.MemoryStream();
@@ -49,7 +49,7 @@ namespace Github
             return result;
         }
 
-        protected FluentHttpRequest PrepareRequest(string method, string path, IDictionary<string, object> parameters)
+        protected virtual FluentHttpRequest PrepareRequest(string method, string path, IDictionary<string, object> parameters)
         {
             var request = new FluentHttpRequest()
                 .BaseUrl(string.Format("http://github.com/api/{0}/json", Version))
@@ -75,7 +75,7 @@ namespace Github
             return request;
         }
 
-        protected object ProcessResponse(FluentHttpResponse response, System.IO.Stream responseStream, Type resultType, out Exception exception)
+        protected virtual object ProcessResponse(FluentHttpResponse response, System.IO.Stream responseStream, Type resultType, out Exception exception)
         {
             // don't throw exception in this method but send it as an out parameter.
             // we can reuse this method for async methods too.
