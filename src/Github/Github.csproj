@@ -32,21 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentHttp">
-      <HintPath>..\..\..\..\FluentHttp\bin\Release\Net40\FluentHttp.dll</HintPath>
+    <Reference Include="FluentHttp, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentHttp.0.0.1.0\lib\net40-client\FluentHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionFactory.cs" />
     <Compile Include="GithubApi.cs" />
+    <Compile Include="GithubApiException.cs" />
     <Compile Include="IJsonSerializer.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
