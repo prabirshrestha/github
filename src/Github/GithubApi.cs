@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using FluentHttp;
-
+﻿
 namespace Github
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net;
+    using FluentHttp;
+
     public class GithubApi
     {
         private readonly string _version;
@@ -34,6 +35,8 @@ namespace Github
 
         #region Api Calls
 
+        #region Get
+
         public object Get(string path, IDictionary<string, object> parameters)
         {
             return GithubApiRequest("GET", path, parameters, null);
@@ -46,13 +49,31 @@ namespace Github
 
         #endregion
 
+        #region Head
+
+        public object Head(string path, IDictionary<string, object> parameters)
+        {
+            return GithubApiRequest("HEAD", path, parameters, null);
+        }
+
+        public object Head(string path)
+        {
+            return Head(path, null);
+        }
+
+        #endregion
+
+        #endregion
+
         #region HttpWebRequest Helper methods
 
         protected virtual object GithubApiRequest(string method, string path, IDictionary<string, object> parameters,
                                                   Type resultType)
         {
-            // save the response to this stream.
-            var responseStream = new MemoryStream();
+            // save the response to this stream if not HEAD.
+            MemoryStream responseStream = null;
+            if (!method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+                responseStream = new MemoryStream();
 
             var request =
                 PrepareRequest(method, path, parameters)
@@ -130,27 +151,43 @@ namespace Github
             }
             else
             {
-                // asyncResult completed
+                // async request completed
 
-                // convert the response stream to string.
-                responseStream.Seek(0, SeekOrigin.Begin);
-                var responseString = FluentHttpRequest.ToString(responseStream);
-
-                // we got the response string already, so dispose the memory stream.
-                responseStream.Dispose();
-
-                if (response.HttpWebResponse.StatusCode == HttpStatusCode.OK)
+                if (response.Request.GetMethod().Equals("HEAD", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Github api executed successfully.
-                    return (resultType == null)
-                               ? JsonSerializer.Current.DeserializeObject(responseString)
-                               : JsonSerializer.Current.DeserializeObject(responseString, resultType);
+                    var httpWebRequestHeaders = response.HttpWebResponse.Headers;
+
+                    var headers = new SimpleJson.JsonObject();
+
+                    foreach (var header in httpWebRequestHeaders.AllKeys)
+                    {
+                        headers.Add(header, httpWebRequestHeaders.GetValues(header)[0]);
+                    }
+
+                    return headers;
                 }
                 else
                 {
-                    // Github api responded with an error.
-                    exception = ExceptionFactory.GetException(responseString, Version, response);
-                    return null;
+                    // convert the response stream to string.
+                    responseStream.Seek(0, SeekOrigin.Begin);
+                    var responseString = FluentHttpRequest.ToString(responseStream);
+
+                    // we got the response string already, so dispose the memory stream.
+                    responseStream.Dispose();
+
+                    if (response.HttpWebResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        // Github api executed successfully.
+                        return (resultType == null)
+                                   ? JsonSerializer.Current.DeserializeObject(responseString)
+                                   : JsonSerializer.Current.DeserializeObject(responseString, resultType);
+                    }
+                    else
+                    {
+                        // Github api responded with an error.
+                        exception = ExceptionFactory.GetException(responseString, Version, response);
+                        return null;
+                    }
                 }
             }
         }
