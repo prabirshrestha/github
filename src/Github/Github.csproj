@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentHttp, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentHttp.0.0.1.0\lib\net40-client\FluentHttp.dll</HintPath>
+    <Reference Include="FluentHttp">
+      <HintPath>..\packages\FluentHttp.0.1.0.0\lib\net40-client\FluentHttp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,8 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExceptionFactory.cs" />
+    <Compile Include="FluentHttp\Authenticators\HttpBasicAuthenticator.cs" />
+    <Compile Include="FluentHttp\Authenticators\OAuth2Authenticator.cs" />
     <Compile Include="GithubApi.cs" />
+    <Compile Include="GithubApiBadCredentialsException.cs" />
     <Compile Include="GithubApiException.cs" />
+    <Compile Include="GithubApiNotFoundException.cs" />
+    <Compile Include="GithubApiVersion.cs" />
+    <Compile Include="GithubAsyncResult.cs" />
+    <Compile Include="GithubOAuthApi.cs" />
+    <Compile Include="GithubOAuthAuthenticator.cs" />
+    <Compile Include="GithubOAuthResult.cs" />
+    <Compile Include="IGithubAuthenticator.cs" />
+    <Compile Include="GithubBasicAuthenticator.cs" />
     <Compile Include="IJsonSerializer.cs" />
     <Compile Include="JsonSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

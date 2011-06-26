@@ -8,10 +8,7 @@ namespace Github
 
         public static IJsonSerializer Current
         {
-            get
-            {
-                return _instance.InnerCurrent;
-            }
+            get { return _instance.InnerCurrent; }
         }
 
         public static void SetJsonSerializer(IJsonSerializer jsonSerializer)
@@ -28,10 +25,7 @@ namespace Github
 
         public IJsonSerializer InnerCurrent
         {
-            get
-            {
-                return _current;
-            }
+            get { return _current; }
         }
 
         public void InnerSetApplication(IJsonSerializer jsonSerializer)
